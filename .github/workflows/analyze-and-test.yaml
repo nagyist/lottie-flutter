@@ -8,16 +8,20 @@ on:
 jobs:
   analyze_and_test:
     name: Flutter analyze
-    runs-on: macos-14
+    # macOS runners are Apple Silicon, matching the maintainer's machine, so
+    # golden rendering stays close enough for the small tolerance in
+    # test/flutter_test_config.dart. Flutter is pinned so the engine (and thus
+    # the rendered pixels) does not drift.
+    runs-on: macos-26
     steps:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+          flutter-version: '3.44.1'
       - run: flutter doctor
       - run: flutter --version
       - run: flutter pub get
-        working-directory: example
       - run: flutter analyze
       - run: flutter test
       - run: flutter test
@@ -40,6 +44,5 @@ jobs:
           channel: 'stable'
       - run: flutter precache web
       - run: flutter pub get
-        working-directory: example
       - run: flutter build web
         working-directory: example
