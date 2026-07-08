@@ -222,8 +222,6 @@ class LottieDrawable {
     var destinationRect = destinationPosition & destinationSize;
     var sourceRect = alignment.inscribe(sourceSize, Offset.zero & inputSize);
 
-    _matrix.setIdentity();
-
     var cacheUsed = false;
     if (renderCache != null) {
       var progressForCache = _progressAliases[progress] ?? progress;
@@ -243,12 +241,7 @@ class LottieDrawable {
     if (!cacheUsed) {
       canvas.save();
       canvas.translate(destinationRect.left, destinationRect.top);
-      _matrix.scaleByDouble(
-        destinationSize.width / sourceRect.width,
-        destinationSize.height / sourceRect.height,
-        destinationSize.width / sourceRect.width,
-        1,
-      );
+      _matrix.setSourceToDestinationScale(sourceRect, destinationSize);
       _compositionLayer.draw(canvas, _matrix, parentAlpha: 255);
       canvas.restore();
     }
